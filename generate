@@ -2,10 +2,10 @@
 
 # [[ ! -f ver.json ]] && curl -q -o ver.json 'https://api.github.com/repos/ochinchina/supervisord/tags?per_page=100'
 # VERSIONS_ONLINE=$(cat ver.json)
-GITHUB_REPOSITORY=
-DOCKER_IMAGE=
-DOCKER_IMAGE_AUTHOR=
-DOCKER_IMAGE_DESCRIPTION=
+GITHUB_REPOSITORY='aptly-dev/aptly'
+DOCKER_IMAGE='reifan49/aptly'
+DOCKER_IMAGE_AUTHOR='Rei Hakurei'
+DOCKER_IMAGE_DESCRIPTION='aptly and supervisord in a lightweight image'
 
 [[ -z ${GITHUB_REPOSITORY} ]] && exit 1
 [[ -z ${DOCKER_IMAGE} ]] && exit 1
@@ -17,7 +17,9 @@ VERSIONS_ONLINE=$(curl -s "https://api.github.com/repos/${GITHUB_REPOSITORY}/tag
 VERSIONS_WITH_MODULES=$(echo "${VERSIONS_ONLINE}" | jq '
     map(.name) |
     map(select(
-      1 == 1
+      test("v[1-9][0-9]+.[0-9]+.[0-9]+") //
+      test("v[2-9].[0-9]+.[0-9]+") //
+      test("v1.([5-9]|[1-9][0-9]+).[0-9]+")
     )) |
     map(.[1:]) | .[]' |
   sort -V |
@@ -38,7 +40,7 @@ for image_ver in ${VERSIONS_AVAILABLE}; do
   docker build -t "${DOCKER_IMAGE}:${image_ver}" \
     --build-arg "BRANCH=v${image_ver}" \
     --label org.opencontainers.image.authors="${DOCKER_IMAGE_AUTHOR}" \
-    # --label org.opencontainers.image.description='${DOCKER_IMAGE_DESCRIPTION}' \
+    --label org.opencontainers.image.description="${DOCKER_IMAGE_DESCRIPTION}" \
     .
   [[ $? -ne 0 ]] || continue
 

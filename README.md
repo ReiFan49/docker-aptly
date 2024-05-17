@@ -1,8 +1,8 @@
-# Golang Static Docker Template
+# aptly Docker
 
-Template to create golang projects statically linked. Only supports Go Modules for now.
+Running by default at port `8000` and `8001`. Docker compose usage is adjusted for public use so the ports are based on their default ports.
 
-This repo will be used mostly for personal use. Feel free to improve by forking on your own.
+Functionality of this repository is underwent testing for meantime.
 
 ## License
 

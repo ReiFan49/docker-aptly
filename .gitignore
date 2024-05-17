@@ -20,3 +20,5 @@
 
 .swp
 .*.swp
+
+/data

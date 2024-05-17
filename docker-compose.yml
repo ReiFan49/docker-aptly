@@ -1,0 +1,28 @@
+version: '3.2'
+services:
+  aptly:
+    build:
+      context: .
+      args:
+        BRANCH: "${IMAGE_VER:-1.5.0}"
+      labels:
+        org.opencontainers.image.authors: "Rei Hakurei"
+        org.opencontainers.image.description: "aptly and supervisord in a lightweight image"
+        org.opencontainers.image.source: 'https://github.com/ReiFan49/docker-aptly'
+      tags:
+      - reifan49/aptly:${IMAGE_VER:-1.5.0}
+      - ghcr.io/reifan49/docker-aptly:${IMAGE_VER:-1.5.0}
+    image: reifan49/aptly:${IMAGE_VER:-1.5.0}
+    container_name: aptly
+    restart: always
+    ports:
+    - ${PORT_SERVICE:-8000}:8000
+    - ${PORT_API:-8001}:8001
+    volumes:
+    - type: bind
+      source: ./aptly.conf
+      target: /etc/aptly.conf
+      # read_only: true
+    - type: bind
+      source: ./data
+      target: /app/data
