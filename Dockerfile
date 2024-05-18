@@ -17,8 +17,10 @@ RUN \
 
 RUN \
   cd src && \
-  env GOOS=linux CGO_ENABLED=0 go build \
-    -ldflags "-s -w -extldflags '-static c'" \
+  env \
+    GOOS=linux CGO_ENABLED=0 \
+    go build \
+    -ldflags "-s -w -extldflags '-static c' -X main.Version=${BRANCH}+static" \
     -o /app/build/${OUTPUT_NAME} && \
   upx -9 -q /app/build/${OUTPUT_NAME} >/dev/null 2>/dev/null && \
   env HOME=/app /app/build/${OUTPUT_NAME} config show && \
